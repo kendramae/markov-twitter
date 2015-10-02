@@ -10,6 +10,7 @@ class KSimpleMarkovGenerator(object):
         self.input_path_list = input_path_list
         self.chains = {}
         self.text_strings_list = []
+        self.make_master_chains_dict()
 
 
     def open_and_read_files(self):
@@ -25,15 +26,11 @@ class KSimpleMarkovGenerator(object):
 
     def add_text_to_chains(self,text_string):
         """
-        Takes a dictionary (our dictionary of chains) and a text string; returns the same dictionary
-        with markov chains added from the text string.
+        Takes a text string from self.text_strings_list and adds its markov chains to our self.chains 
+        dictionary, with None as the value to the key of the final n words.
 
         A chain will be a key that consists of a tuple of (word1, word2, ..., wordn)
         and the value would be a list of the word(s) that follow those n words in the input text.
-
-           >>> make_chains({}, 2, "hi there mary hi there juanita")
-            {('hi', 'there'): ['mary', 'juanita'], ('there', 'mary'): ['hi'], ('mary', 'hi': ['there']}
-
         """
         
         word_list = text_string.split()
@@ -57,8 +54,8 @@ class KSimpleMarkovGenerator(object):
 
 
     def make_master_chains_dict(self):
-        """Takes the size_of_ngram and a list of text strings, feeds those to add_text_to_chains; 
-        returns one dictionary with all markov chains.
+        """Calls self.open_and_read_files() to open list of files and add string versions to self.text_string_list, 
+        then calls self.add_text_to_chains() to create our master dictionary of markov chains, self.chains.
         """
 
         # Open all files and add a string version of the text of each to self.text_string_list

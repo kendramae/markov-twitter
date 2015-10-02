@@ -25,12 +25,14 @@ class KSimpleMarkovGenerator(object):
 
 
     def add_text_to_chains(self,text_string):
-        """
+        """Takes a text string, adds its ngrams to self.chains; return None
+
         Takes a text string from self.text_strings_list and adds its markov chains to our self.chains 
         dictionary, with None as the value to the key of the final n words.
-
         A chain will be a key that consists of a tuple of (word1, word2, ..., wordn)
         and the value would be a list of the word(s) that follow those n words in the input text.
+
+        Called by self.make_master_chains_dict() in __init__ -- does not need to be called directly.
         """
         
         word_list = text_string.split()
@@ -54,7 +56,11 @@ class KSimpleMarkovGenerator(object):
 
 
     def make_master_chains_dict(self):
-        """Calls self.open_and_read_files() to open list of files and add string versions to self.text_string_list, 
+        
+        """ 
+
+
+        Calls self.open_and_read_files() to open list of files and add string versions to self.text_string_list, 
         then calls self.add_text_to_chains() to create our master dictionary of markov chains, self.chains.
         """
 
@@ -67,7 +73,7 @@ class KSimpleMarkovGenerator(object):
 
 
     def make_text(self):
-        """Takes self.chains (dictionary of markov chains); returns random text."""
+        """Looks at self.chains (dictionary of markov chains); returns random text."""
 
         ngrams = self.chains.keys()  # list of ngrams (which are tuples)
         active_ngram = choice(ngrams)  # pick a random starting n-gram
@@ -109,9 +115,7 @@ if __name__ == '__main__':
     size_of_ngram = int(argv[1])
 
     #get filepaths from command line
-    input_path_list = []
-    for arg in argv[2:]:
-        input_path_list.append(arg)
+    input_path_list = argv[2:]
 
     ## instantiate generator here
     generator = KSimpleMarkovGenerator(size_of_ngram, input_path_list)

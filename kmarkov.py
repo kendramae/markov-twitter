@@ -9,7 +9,7 @@ class KSimpleMarkovGenerator(object):
         self.size_of_ngram = size_of_ngram
         self.input_path_list = input_path_list
         self.chains = {}
-        self.input_text_list = []
+        self.text_strings_list = []
 
 
     def open_and_read_files(self):
@@ -20,7 +20,7 @@ class KSimpleMarkovGenerator(object):
         for input_path in self.input_path_list:
             text_file = open(input_path)
             text_string = text_file.read()
-            self.input_text_list.append(text_string)
+            self.text_strings_list.append(text_string)
 
 
     def add_text_to_chains(self,text_string):
@@ -41,12 +41,12 @@ class KSimpleMarkovGenerator(object):
 
         #initialize first ngram (which will become the tuple/key) with the first n words in the text
         ngram_list = []
-        for i in range(size_of_ngram):
+        for i in range(self.size_of_ngram):
             ngram_list.append(word_list[i])
         ngram = tuple(ngram_list)
         
         # for each word in our text, add it to the dictionary entry for the ngram preceeding it
-        for i in range(size_of_ngram, len(word_list)):
+        for i in range(self.size_of_ngram, len(word_list)):
             word = word_list[i]
             if ngram in self.chains:
                 self.chains[ngram].append(word)
@@ -61,8 +61,12 @@ class KSimpleMarkovGenerator(object):
         returns one dictionary with all markov chains.
         """
 
+        # Open all files and add a string version of the text of each to self.text_string_list
+        self.open_and_read_files()
+
+        # Add chains from each text source to master chains dictionary
         for text_string in self.text_strings_list:
-            self.chains = self.add_text_to_chains(text_string)
+            self.add_text_to_chains(text_string)
 
 
     def make_text(self, chains):
@@ -112,12 +116,7 @@ if __name__ == '__main__':
     for arg in argv[2:]:
         input_path_list.append(arg)
 
-
-    # Open the file(s) and turn it/them into one long string, which then gets added to list of text strings
-    input_text_list = []
-    for input_path in self.input_path_list:
-        text_string = open_and_read_file(input_path)
-        input_text_list.append(text_string)
+    ## instantiate generator here
 
     #create master dictionary of chains
     master_chains_dict = make_master_chains_dict(size_of_ngram, input_text_list)

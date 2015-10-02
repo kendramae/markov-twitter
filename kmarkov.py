@@ -66,10 +66,10 @@ class KSimpleMarkovGenerator(object):
             self.add_text_to_chains(text_string)
 
 
-    def make_text(self, chains):
-        """Takes dictionary of markov chains; returns random text."""
+    def make_text(self):
+        """Takes self.chains (dictionary of markov chains); returns random text."""
 
-        ngrams = chains.keys()  # list of ngrams (which are tuples)
+        ngrams = self.chains.keys()  # list of ngrams (which are tuples)
         active_ngram = choice(ngrams)  # pick a random starting n-gram
 
         # if our current starting n-gram doesn't begin with a capital, choose another until it does
@@ -82,7 +82,7 @@ class KSimpleMarkovGenerator(object):
         # until we reach the end (flagged by a None from choice(possible_next_words)), keep picking 
         # a random word from the active ngram's list of followers
         while True:
-            possible_next_words = chains[active_ngram]
+            possible_next_words = self.chains[active_ngram]
             new_word = choice(possible_next_words)
 
             if new_word == None:
@@ -114,11 +114,9 @@ if __name__ == '__main__':
         input_path_list.append(arg)
 
     ## instantiate generator here
-
-    #create master dictionary of chains
-    master_chains_dict = make_master_chains_dict(size_of_ngram, input_text_list)
+    generator = KSimpleMarkovGenerator(size_of_ngram, input_path_list)
 
     # Produce random text
-    random_text = make_text(master_chains_dict)
+    random_text = generator.make_text()
 
     print random_text

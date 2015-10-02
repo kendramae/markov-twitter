@@ -36,8 +36,6 @@ class KSimpleMarkovGenerator(object):
 
         """
         
-        self.
-
         word_list = text_string.split()
         word_list.append(None)
 
@@ -50,27 +48,21 @@ class KSimpleMarkovGenerator(object):
         # for each word in our text, add it to the dictionary entry for the ngram preceeding it
         for i in range(size_of_ngram, len(word_list)):
             word = word_list[i]
-            if ngram in chains:
-                chains[ngram].append(word)
+            if ngram in self.chains:
+                self.chains[ngram].append(word)
             else:
-                chains[ngram] = [word]
+                self.chains[ngram] = [word]
 
             ngram = ngram[1:] + (word,)
 
-        return chains
 
-
-
-    def make_master_chains_dict(self, size_of_ngram, text_strings_list):
+    def make_master_chains_dict(self):
         """Takes the size_of_ngram and a list of text strings, feeds those to add_text_to_chains; 
         returns one dictionary with all markov chains.
         """
 
-        chains = {}
-        for text_string in text_strings_list:
-            chains = add_text_to_chains(chains, size_of_ngram, text_string)
-        
-        return chains
+        for text_string in self.text_strings_list:
+            self.chains = self.add_text_to_chains(text_string)
 
 
     def make_text(self, chains):
